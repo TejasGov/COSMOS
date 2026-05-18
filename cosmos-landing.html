@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmos — One link. Every click, understood.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #05050E;
+  --bg2:     #08081A;
+  --bg3:     #0C0C20;
+  --text:    #EAE5D8;
+  --text2:   #A09BA8;
+  --text3:   #5E5A6E;
+  --accent:  #9AAEF5;
+  --mint:    #68EDD4;
+  --border:  rgba(255,255,255,0.055);
+  --border2: rgba(154,174,245,0.18);
+  --glow-color: rgba(154,174,245,0.45);
+
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --body:    'Outfit', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── STAR CANVAS ─── */
+#stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem;
+  background: rgba(5,5,14,0.7);
+  backdrop-filter: blur(20px) saturate(1.5);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.nav-center {
+  display: flex; gap: 2.5rem; list-style: none;
+}
+.nav-center a {
+  font-size: 0.8rem;
+  color: var(--text3);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.25s;
+}
+.nav-center a:hover { color: var(--text); }
+.nav-right {
+  display: flex; align-items: center; gap: 1rem;
+}
+.btn-nav {
+  font-family: var(--body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-nav:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ─── SECTION WRAPPER ─── */
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+/* ─── BLOOM / GLOW ─── */
+.glow {
+  color: var(--accent);
+  text-shadow:
+    0 0 22px rgba(154,174,245,0.5),
+    0 0 50px rgba(154,174,245,0.18);
+}
+.glow-mint {
+  color: var(--mint);
+  text-shadow:
+    0 0 22px rgba(104,237,212,0.45),
+    0 0 50px rgba(104,237,212,0.15);
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 7rem 3rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-content {
+  max-width: 1100px; margin: 0 auto; width: 100%;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 6rem;
+  align-items: center;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: rise 0.8s 0.1s ease forwards;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 22px; height: 1px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(3rem, 5.5vw, 5.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  opacity: 0;
+  animation: rise 0.8s 0.2s ease forwards;
+}
+h1 em { font-style: italic; font-weight: 300; }
+.hero-sub {
+  margin-top: 1.75rem;
+  font-size: 1.0625rem;
+  color: var(--text2);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 400px;
+  opacity: 0;
+  animation: rise 0.8s 0.35s ease forwards;
+}
+.hero-actions {
+  margin-top: 2.5rem;
+  display: flex; gap: 1rem; align-items: center;
+  opacity: 0;
+  animation: rise 0.8s 0.48s ease forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent);
+  color: #05050E;
+  font-family: var(--body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+.btn-ghost {
+  font-size: 0.875rem;
+  color: var(--text2);
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: var(--body);
+}
+.btn-ghost:hover { color: var(--text); }
+.hero-proof {
+  margin-top: 2.75rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: rise 0.8s 0.6s ease forwards;
+}
+.hero-proof span { color: var(--text2); }
+
+/* ─── IPHONE 16 PRO MOCKUP ─── */
+.phone-wrap {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+  opacity: 0;
+  animation: rise 1s 0.3s ease forwards;
+}
+
+/* Outer titanium body */
+.phone {
+  width: 272px;
+  position: relative;
+  border-radius: 54px;
+  background: linear-gradient(160deg, #2E2E2E 0%, #1A1A1A 40%, #232323 100%);
+  padding: 13px;
+  box-shadow:
+    /* subtle rim highlight top */
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    /* subtle rim shadow bottom */
+    inset 0 -1px 0 rgba(0,0,0,0.5),
+    /* outer glow */
+    0 0 0 1px rgba(0,0,0,0.7),
+    /* ambient light rim */
+    0 0 0 1.5px rgba(255,255,255,0.06),
+    /* main depth shadow */
+    0 40px 90px rgba(0,0,0,0.85),
+    /* cosmos accent glow */
+    0 0 70px rgba(154,174,245,0.06);
+}
+
+/* Left side — action button */
+.phone::before {
+  content: '';
+  position: absolute;
+  left: -3.5px;
+  top: 108px;
+  width: 3.5px;
+  height: 34px;
+  background: linear-gradient(to bottom, #2A2A2A, #1C1C1C);
+  border-radius: 3px 0 0 3px;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.08);
+}
+
+/* Left side — volume buttons */
+.phone::after {
+  content: '';
+  position: absolute;
+  left: -3.5px;
+  top: 158px;
+  width: 3.5px;
+  height: 68px;
+  background: linear-gradient(to bottom,
+    #1C1C1C 0%,
+    #1C1C1C 44%,
+    transparent 44%,
+    transparent 52%,
+    #1C1C1C 52%,
+    #1C1C1C 100%
+  );
+  border-radius: 3px 0 0 3px;
+}
+
+/* Right side — power button */
+.phone-power {
+  position: absolute;
+  right: -3.5px;
+  top: 158px;
+  width: 3.5px;
+  height: 58px;
+  background: linear-gradient(to bottom, #2A2A2A, #1C1C1C);
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 1px 0 0 rgba(255,255,255,0.08);
+}
+
+/* The screen area */
+.phone-screen {
+  background: #060612;
+  border-radius: 43px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Dynamic Island */
+.dynamic-island {
+  position: relative;
+  z-index: 10;
+  margin: 14px auto 0;
+  width: 112px;
+  height: 34px;
+  background: #000;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+}
+.di-camera {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #0D0D14;
+  border: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+.di-camera::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #1a1a2a;
+}
+.di-sensor {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(154,174,245,0.15);
+  box-shadow: 0 0 6px rgba(154,174,245,0.3);
+}
+
+/* Screen content area */
+.phone-inner {
+  width: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 14px 14px;
+  gap: 9px;
+  overflow: hidden;
+}
+.p-avatar {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(154,174,245,0.25) 0%, rgba(104,237,212,0.2) 100%);
+  border: 1px solid rgba(154,174,245,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.p-name {
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.p-bio {
+  font-size: 0.6875rem;
+  color: var(--text2);
+  text-align: center;
+  line-height: 1.5;
+  font-weight: 300;
+}
+.p-link {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: default;
+  transition: border-color 0.25s;
+  animation: slideLink 0.5s ease both;
+}
+.p-link:nth-child(4) { animation-delay: 0.08s; }
+.p-link:nth-child(5) { animation-delay: 0.16s; }
+.p-link:nth-child(6) { animation-delay: 0.24s; }
+.p-link:nth-child(7) { animation-delay: 0.32s; }
+.p-link:hover { border-color: rgba(154,174,245,0.2); }
+.p-icon {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.p-link-label {
+  flex: 1;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.p-link-sub {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: var(--text3);
+  margin-top: 1px;
+}
+.p-pill {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  padding: 2px 6px;
+  border-radius: 100px;
+  background: rgba(154,174,245,0.08);
+  color: var(--accent);
+  border: 1px solid rgba(154,174,245,0.15);
+  white-space: nowrap;
+}
+.p-bottom {
+  margin-top: auto;
+  width: 100%;
+  background: rgba(255,255,255,0.025);
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 20px 20px;
+  padding: 10px 14px;
+  display: flex; justify-content: space-between;
+}
+.p-stat { text-align: center; }
+.p-stat-val {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  display: block;
+}
+.p-stat-key {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* floating chips */
+.chip {
+  position: absolute;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.6875rem;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  backdrop-filter: blur(12px);
+  z-index: 2;
+}
+.chip-ai { right: -8px; top: 72px; width: 172px; animation: floatA 4.5s ease-in-out infinite; }
+.chip-safe { left: -8px; bottom: 120px; width: 155px; animation: floatB 3.8s ease-in-out infinite; }
+.chip-tag {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+.chip p { color: var(--text); line-height: 1.45; font-size: 0.6875rem; font-weight: 300; }
+.chip .chip-tag.safe { color: var(--mint); }
+
+/* ─── DIVIDER STRIP ─── */
+.strip {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 3rem;
+}
+.strip-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4rem;
+}
+.strip-item {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.strip-item::before {
+  content: '✦';
+  color: rgba(154,174,245,0.35);
+  font-size: 0.5rem;
+}
+
+/* ─── SECTION TYPE ─── */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.eyebrow::before {
+  content: '';
+  width: 18px; height: 1px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+h2 {
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+h2 em { font-style: italic; font-weight: 300; }
+.lead {
+  font-size: 1rem;
+  color: var(--text2);
+  font-weight: 300;
+  line-height: 1.75;
+  max-width: 420px;
+  margin-top: 1rem;
+}
+
+/* ─── THREE PILLARS ─── */
+.pillars {
+  position: relative; z-index: 1;
+  padding: 6rem 3rem;
+}
+.pillars-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 3.5rem;
+}
+.pillar {
+  background: var(--bg);
+  padding: 2.5rem 2.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.pillar:hover { background: rgba(154,174,245,0.025); }
+.pillar-num {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.pillar-heading {
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+.pillar-heading em { font-style: italic; }
+.pillar-body {
+  font-size: 0.875rem;
+  color: var(--text2);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ─── FEATURES HORIZONTAL SCROLL ─── */
+.features-section {
+  position: relative; z-index: 1;
+  background: var(--bg2);
+  padding: 6rem 0;
+  overflow: hidden;
+}
+.features-header {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 3rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: end;
+  margin-bottom: 3rem;
+}
+.features-scroll-hint {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  align-self: flex-end;
+  padding-bottom: 0.25rem;
+}
+.scroll-arrow {
+  display: flex; gap: 3px;
+}
+.scroll-arrow span {
+  width: 18px; height: 1px;
+  background: var(--text3);
+  position: relative;
+  display: block;
+  margin-top: 6px;
+}
+.scroll-arrow span::after {
+  content: '';
+  position: absolute;
+  right: 0; top: -3px;
+  width: 7px; height: 7px;
+  border-right: 1px solid var(--text3);
+  border-top: 1px solid var(--text3);
+  transform: rotate(45deg);
+}
+
+/* scroll track */
+.features-track-wrap {
+  padding: 0 3rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  padding-bottom: 1.5rem;
+}
+.features-track-wrap:active { cursor: grabbing; }
+.features-track-wrap::-webkit-scrollbar { display: none; }
+
+.features-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  padding-right: 3rem;
+  padding-top: 4px; /* room for folder tab */
+}
+
+/* ── FOLDER CARD ── */
+.folder {
+  width: 310px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The tab that sticks up above the card body */
+.f-tab {
+  display: flex; align-items: center; gap: 8px;
+  width: fit-content;
+  min-width: 130px;
+  max-width: 175px;
+  height: 30px;
+  padding: 0 14px;
+  background: var(--f-bg, var(--bg3));
+  border: 1px solid var(--f-border, var(--border));
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px; /* overlap body top border */
+}
+.f-num {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+}
+.f-badge {
+  font-family: var(--mono);
+  font-size: 0.46rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.f-badge.ai   { background: rgba(154,174,245,0.1); color: var(--accent); }
+.f-badge.sec  { background: rgba(104,237,212,0.08); color: var(--mint); }
+.f-badge.core { background: rgba(255,255,255,0.05); color: var(--text3); }
+
+/* The folder body */
+.f-body {
+  background: var(--f-bg, var(--bg3));
+  border: 1px solid var(--f-border, var(--border));
+  border-radius: 0 14px 14px 14px;
+  overflow: hidden;
+  flex: 1;
+  display: flex; flex-direction: column;
+  transition: border-color 0.25s;
+}
+.folder:hover .f-body {
+  border-color: var(--f-hover-border, rgba(255,255,255,0.1));
+}
+
+/* Video preview area */
+.f-preview {
+  width: 100%;
+  height: 196px;
+  background: var(--f-preview-bg, var(--bg));
+  border-bottom: 1px solid var(--f-border, var(--border));
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle grid lines on preview */
+.f-preview::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+/* fade edges */
+.f-preview::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, var(--f-preview-bg, var(--bg)) 100%);
+}
+.f-play {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--f-play-color, rgba(255,255,255,0.12));
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.folder:hover .f-play {
+  transform: scale(1.08);
+  border-color: var(--f-play-hover, rgba(154,174,245,0.4));
+}
+.f-play svg {
+  width: 14px; height: 14px;
+  fill: var(--f-play-color, rgba(255,255,255,0.25));
+  margin-left: 2px;
+  transition: fill 0.2s;
+}
+.folder:hover .f-play svg { fill: var(--f-play-hover-fill, rgba(154,174,245,0.7)); }
+.f-preview-label {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  position: relative; z-index: 1;
+}
+
+/* Text area */
+.f-info { padding: 1.25rem 1.375rem 1.5rem; }
+.f-name {
+  font-family: var(--display);
+  font-size: 1.1875rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.625rem;
+  letter-spacing: -0.01em;
+}
+.f-desc {
+  font-size: 0.8rem;
+  color: var(--text2);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* Color themes per folder type */
+.folder.ai {
+  --f-bg: #0B0B1E;
+  --f-border: rgba(154,174,245,0.12);
+  --f-hover-border: rgba(154,174,245,0.25);
+  --f-preview-bg: #070714;
+  --f-play-color: rgba(154,174,245,0.2);
+  --f-play-hover: rgba(154,174,245,0.5);
+  --f-play-hover-fill: rgba(154,174,245,0.8);
+}
+.folder.sec {
+  --f-bg: #08120F;
+  --f-border: rgba(104,237,212,0.1);
+  --f-hover-border: rgba(104,237,212,0.22);
+  --f-preview-bg: #050E0B;
+  --f-play-color: rgba(104,237,212,0.18);
+  --f-play-hover: rgba(104,237,212,0.45);
+  --f-play-hover-fill: rgba(104,237,212,0.8);
+}
+
+/* scroll progress bar */
+.features-progress {
+  max-width: 1100px; margin: 0 auto;
+  padding: 1.25rem 3rem 0;
+  display: flex; align-items: center; gap: 1rem;
+}
+.progress-track {
+  flex: 1; height: 1px;
+  background: var(--border);
+  border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  width: 0%;
+  transition: width 0.1s linear;
+  opacity: 0.6;
+}
+.progress-count {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+/* ─── AI SECTION ─── */
+.ai-section {
+  position: relative; z-index: 1;
+  padding: 6rem 3rem;
+}
+.ai-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.05fr;
+  gap: 5rem; align-items: center;
+}
+.ai-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.5rem;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ai-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+.ai-card-label {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ai-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+.ai-ts {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+}
+.rec {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: border-color 0.25s;
+}
+.rec:hover { border-color: rgba(154,174,245,0.15); }
+.rec-level {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 7px;
+}
+.rec-level.high   { color: #F78080; }
+.rec-level.medium { color: #FBBF80; }
+.rec-level.low    { color: var(--mint); }
+.rec-body {
+  font-size: 0.8125rem;
+  color: var(--text);
+  line-height: 1.55;
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+.rec-impact {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: var(--text3);
+}
+.rec-impact span { color: var(--mint); }
+.ai-apply {
+  display: flex; gap: 8px;
+  margin-top: 4px;
+}
+.ai-apply button {
+  flex: 1; padding: 11px;
+  border-radius: 9px;
+  font-family: var(--body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+.ai-apply .apply-btn {
+  background: var(--accent);
+  color: #05050E;
+  border: none;
+}
+.ai-apply .apply-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.ai-apply .dismiss-btn {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.ai-apply .dismiss-btn:hover { border-color: rgba(255,255,255,0.12); color: var(--text); }
+
+/* ─── ANALYTICS SECTION ─── */
+.analytics-section {
+  position: relative; z-index: 1;
+  background: var(--bg2);
+  padding: 6rem 3rem;
+}
+.analytics-inner { max-width: 1100px; margin: 0 auto; }
+.dash {
+  margin-top: 3.5rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.dash-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.125rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.dash-name {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--text2);
+  letter-spacing: 0.04em;
+}
+.dash-range {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.metrics-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.metric {
+  background: var(--bg3);
+  padding: 1.25rem 1.5rem;
+}
+.metric-k {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.metric-v {
+  font-family: var(--display);
+  font-size: 1.875rem;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.metric-d {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--mint);
+}
+.metric-d.dn { color: #F78080; }
+.chart-row {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 1px; background: var(--border);
+}
+.chart-box {
+  background: var(--bg3);
+  padding: 1.5rem;
+}
+.chart-label-sm {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 1rem;
+}
+.bars {
+  display: flex; align-items: flex-end; gap: 5px;
+  height: 110px;
+}
+.bar-g { flex: 1; display: flex; align-items: flex-end; }
+.bar-b {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  background: rgba(154,174,245,0.12);
+  transition: background 0.2s;
+  cursor: default;
+}
+.bar-b:hover { background: rgba(154,174,245,0.35); }
+.bar-b.hi { background: rgba(154,174,245,0.5); }
+.bar-days {
+  display: flex; gap: 5px; margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.bar-day {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 0.47rem;
+  color: var(--text3);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.sources {
+  background: var(--bg3);
+  padding: 1.5rem;
+  display: flex; flex-direction: column; gap: 11px;
+}
+.src-row {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.src-head { display: flex; justify-content: space-between; font-size: 0.6875rem; }
+.src-name { color: var(--text); font-weight: 400; }
+.src-num { font-family: var(--mono); color: var(--text3); font-size: 0.5625rem; }
+.src-track { height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; }
+.src-fill { height: 100%; border-radius: 2px; }
+
+/* ─── CTA ─── */
+.cta-section {
+  position: relative; z-index: 1;
+  padding: 9rem 3rem;
+  text-align: center;
+  overflow: hidden;
+}
+.cta-haze {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(154,174,245,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 { max-width: 600px; margin: 0 auto; }
+.cta-section .lead { max-width: 440px; margin: 1rem auto 0; text-align: center; }
+.waitlist-form {
+  margin-top: 2.75rem;
+  display: flex; justify-content: center; gap: 10px;
+  flex-wrap: wrap;
+}
+.waitlist-input {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem 1.25rem;
+  font-family: var(--body);
+  font-size: 0.9rem;
+  color: var(--text);
+  width: 270px;
+  outline: none;
+  transition: border-color 0.25s;
+  font-weight: 300;
+}
+.waitlist-input::placeholder { color: var(--text3); }
+.waitlist-input:focus { border-color: var(--border2); }
+.cta-note {
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.5875rem;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 2.25rem 3rem;
+}
+.footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-logo {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a {
+  font-size: 0.8rem;
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 300;
+}
+.footer-links a:hover { color: var(--text2); }
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes floatA {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-9px); }
+}
+@keyframes floatB {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@keyframes slideLink {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+  .hero-content { grid-template-columns: 1fr; }
+  .phone-wrap { display: none; }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .features-header { grid-template-columns: 1fr; gap: 1.5rem; }
+  .ai-inner { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: 1fr 1fr; }
+  .chart-row { grid-template-columns: 1fr; }
+  nav .nav-center { display: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Cosmos</a>
+  <ul class="nav-center">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#ai">AI</a></li>
+    <li><a href="#analytics">Analytics</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#waitlist" class="btn-nav">Join waitlist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">Private beta · Now open</div>
+      <h1>
+        One link.<br>
+        Every click,<br>
+        <em class="glow">understood.</em>
+      </h1>
+      <p class="hero-sub">
+        Cosmos turns your link-in-bio into a living signal — scanning every destination for safety, watching what your audience does, and quietly telling you what to change next.
+      </p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn-primary">Get early access →</a>
+        <a href="#features" class="btn-ghost">See what it does</a>
+      </div>
+      <div class="hero-proof">
+        <span>240+ creators</span> already waiting · Founding access available
+      </div>
+    </div>
+
+    <!-- PHONE -->
+    <div class="phone-wrap">
+      <div style="position:relative; width:310px; display:flex; justify-content:center;">
+        <div class="phone">
+          <!-- Right power button -->
+          <div class="phone-power"></div>
+
+          <div class="phone-screen">
+            <!-- Dynamic Island -->
+            <div class="dynamic-island">
+              <div class="di-camera"></div>
+              <div class="di-sensor"></div>
+            </div>
+
+            <div class="phone-inner">
+              <div class="p-avatar">S</div>
+              <div class="p-name">Sara Okafor</div>
+              <div class="p-bio">Brand strategist & educator<br>Helping founders tell better stories</div>
+
+              <div class="p-link">
+                <div class="p-icon" style="background:rgba(154,174,245,0.08);">🎓</div>
+                <div style="flex:1">
+                  <div class="p-link-label">Branding masterclass</div>
+                  <div class="p-link-sub">1,041 clicks this week</div>
+                </div>
+                <div class="p-pill">↑ 28%</div>
+              </div>
+              <div class="p-link">
+                <div class="p-icon" style="background:rgba(104,237,212,0.07);">📅</div>
+                <div style="flex:1">
+                  <div class="p-link-label">Book a strategy session</div>
+                  <div class="p-link-sub">312 clicks</div>
+                </div>
+                <div class="p-pill" style="color:var(--mint);border-color:rgba(104,237,212,0.2);background:rgba(104,237,212,0.06);">AI ↑</div>
+              </div>
+              <div class="p-link">
+                <div class="p-icon" style="background:rgba(255,255,255,0.04);">✉️</div>
+                <div style="flex:1">
+                  <div class="p-link-label">Weekly newsletter</div>
+                  <div class="p-link-sub">228 clicks</div>
+                </div>
+              </div>
+              <div class="p-link">
+                <div class="p-icon" style="background:rgba(255,255,255,0.04);">🎙</div>
+                <div style="flex:1">
+                  <div class="p-link-label">The Brand Dispatch</div>
+                  <div class="p-link-sub">190 clicks</div>
+                </div>
+              </div>
+
+              <div class="p-bottom">
+                <div class="p-stat">
+                  <span class="p-stat-val">1,771</span>
+                  <span class="p-stat-key">Today</span>
+                </div>
+                <div class="p-stat">
+                  <span class="p-stat-val">5.8%</span>
+                  <span class="p-stat-key">Email rate</span>
+                </div>
+                <div class="p-stat">
+                  <span class="p-stat-val" style="color:var(--mint);">✓</span>
+                  <span class="p-stat-key">All safe</span>
+                </div>
+              </div>
+            </div>
+          </div><!-- /phone-screen -->
+        </div><!-- /phone -->
+
+        <div class="chip chip-ai">
+          <div class="chip-tag">AI insight</div>
+          <p>Promote "Book a session" above the fold — TikTok visitors convert 3× better on services.</p>
+        </div>
+        <div class="chip chip-safe">
+          <div class="chip-tag safe">Security</div>
+          <p>4 links scanned. No threats found.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-inner">
+    <div class="strip-item">Built for creators</div>
+    <div class="strip-item">Instagram · TikTok · YouTube · Substack · LinkedIn</div>
+    <div class="strip-item">No design skills needed</div>
+  </div>
+</div>
+
+<!-- THREE PILLARS -->
+<div class="pillars">
+  <div class="wrap">
+    <div class="eyebrow reveal">What Cosmos does differently</div>
+    <h2 class="reveal">Three things<br>done <em class="glow">properly.</em></h2>
+  </div>
+  <div class="wrap" style="padding-top:0; padding-bottom:0;">
+    <div class="pillars-grid reveal" style="margin-top:3rem;">
+      <div class="pillar">
+        <div class="pillar-num">01 — Speed</div>
+        <div class="pillar-heading">Your page,<br><em>live in seconds.</em></div>
+        <p class="pillar-body">Import your Linktree or paste links manually. No design decisions, no templates to wrestle with. Cosmos makes something beautiful from whatever you give it — instantly.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02 — Safety</div>
+        <div class="pillar-heading"><em class="glow-mint">Every link,</em><br>quietly protected.</div>
+        <p class="pillar-body">Cosmos scans every destination for malware, phishing, and broken pages — around the clock. If something breaks or goes dark, you hear about it before your audience does.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03 — Intelligence</div>
+        <div class="pillar-heading">Advice, not<br><em>just charts.</em></div>
+        <p class="pillar-body">Most analytics give you numbers. Cosmos gives you a specific next step — reorder this link, reword that CTA, show this variant to your Instagram traffic. Ranked by predicted impact.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features-section" id="features">
+
+  <div class="features-header">
+    <div>
+      <div class="eyebrow reveal">Everything in the MVP</div>
+      <h2 class="reveal">Eleven features.<br><em class="glow">Nothing</em> gated.</h2>
+    </div>
+    <div class="reveal" style="display:flex; flex-direction:column; justify-content:flex-end; gap:0.75rem;">
+      <p class="lead" style="margin-top:0; max-width:360px;">Every capability ships on day one. No premium tiers, no features held back to justify an upgrade.</p>
+      <div class="features-scroll-hint">
+        Scroll to explore
+        <div class="scroll-arrow"><span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-track-wrap" id="featTrack">
+    <div class="features-track">
+
+      <!-- 01 -->
+      <div class="folder">
+        <div class="f-tab">
+          <span class="f-num">01</span>
+          <span class="f-badge core">Core</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Fast page builder</div>
+            <p class="f-desc">Drag, drop, preview. Your link page goes live before you finish your coffee — no design decisions required.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="folder">
+        <div class="f-tab">
+          <span class="f-num">02</span>
+          <span class="f-badge core">Core</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Linktree import</div>
+            <p class="f-desc">Paste your existing URL. Everything migrates in two minutes — links, order, labels, all of it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="folder sec">
+        <div class="f-tab">
+          <span class="f-num">03</span>
+          <span class="f-badge sec">Security</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Link safety scanner</div>
+            <p class="f-desc">Every destination checked for malware and phishing before your audience ever clicks it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="folder sec">
+        <div class="f-tab">
+          <span class="f-num">04</span>
+          <span class="f-badge sec">Security</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Broken link monitor</div>
+            <p class="f-desc">Uptime checks on every link, around the clock. You're notified the moment something breaks.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="folder">
+        <div class="f-tab">
+          <span class="f-num">05</span>
+          <span class="f-badge core">Core</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Clean analytics</div>
+            <p class="f-desc">Clicks, sources, devices, top-performing links — the numbers that matter, nothing that doesn't.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 -->
+      <div class="folder ai">
+        <div class="f-tab">
+          <span class="f-num">06</span>
+          <span class="f-badge ai">AI</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">AI page recommendations</div>
+            <p class="f-desc">Layout, order, theme — specific changes ranked by predicted lift on your actual goal.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 -->
+      <div class="folder ai">
+        <div class="f-tab">
+          <span class="f-num">07</span>
+          <span class="f-badge ai">AI</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">AI CTA rewriting</div>
+            <p class="f-desc">Bland link labels lose clicks. Cosmos rewrites them based on what your audience actually responds to.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 -->
+      <div class="folder ai">
+        <div class="f-tab">
+          <span class="f-num">08</span>
+          <span class="f-badge ai">AI</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Source-based variants</div>
+            <p class="f-desc">Instagram visitors see a different order than YouTube fans. Personalisation, without a line of code.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 -->
+      <div class="folder">
+        <div class="f-tab">
+          <span class="f-num">09</span>
+          <span class="f-badge core">Core</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Email capture</div>
+            <p class="f-desc">Turn bio traffic into your list. Built-in capture that connects to any email provider you already use.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 -->
+      <div class="folder">
+        <div class="f-tab">
+          <span class="f-num">10</span>
+          <span class="f-badge core">Core</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Custom domains</div>
+            <p class="f-desc">your.name/links — not cosmos.so/username. Your brand front and centre, always.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 -->
+      <div class="folder">
+        <div class="f-tab">
+          <span class="f-num">11</span>
+          <span class="f-badge core">Core</span>
+        </div>
+        <div class="f-body">
+          <div class="f-preview">
+            <div class="f-play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6V2z"/></svg></div>
+            <span class="f-preview-label">Preview coming soon</span>
+          </div>
+          <div class="f-info">
+            <div class="f-name">Data export</div>
+            <p class="f-desc">Everything you generate is yours. Export the full dataset to CSV anytime — no friction, no lock-in.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /track -->
+  </div><!-- /track-wrap -->
+
+  <!-- progress bar -->
+  <div class="features-progress">
+    <div class="progress-track">
+      <div class="progress-fill" id="featProgress"></div>
+    </div>
+    <span class="progress-count" id="featCount">1 / 11</span>
+  </div>
+
+</div>
+
+<!-- AI SECTION -->
+<section class="ai-section" id="ai">
+  <div class="ai-inner">
+    <div>
+      <div class="eyebrow reveal">AI engine</div>
+      <h2 class="reveal">Your audience<br>shows you what<br><em class="glow">matters.</em></h2>
+      <p class="lead reveal">Cosmos reads the data your clicks produce and surfaces a specific, ranked action. Not a dashboard to interpret — a next step to take.</p>
+
+      <ul class="reveal" style="list-style:none; margin-top:2rem; display:flex; flex-direction:column; gap:0.875rem;">
+        <li style="display:flex; gap:0.75rem; font-size:0.9rem; color:var(--text2); font-weight:300; align-items:flex-start;">
+          <span style="color:var(--accent); margin-top:3px; flex-shrink:0; font-size:0.6rem;">✦</span>
+          Learns from your traffic patterns over time
+        </li>
+        <li style="display:flex; gap:0.75rem; font-size:0.9rem; color:var(--text2); font-weight:300; align-items:flex-start;">
+          <span style="color:var(--accent); margin-top:3px; flex-shrink:0; font-size:0.6rem;">✦</span>
+          Rewrites CTAs that are being ignored
+        </li>
+        <li style="display:flex; gap:0.75rem; font-size:0.9rem; color:var(--text2); font-weight:300; align-items:flex-start;">
+          <span style="color:var(--accent); margin-top:3px; flex-shrink:0; font-size:0.6rem;">✦</span>
+          Tailors page order by where visitors came from
+        </li>
+        <li style="display:flex; gap:0.75rem; font-size:0.9rem; color:var(--text2); font-weight:300; align-items:flex-start;">
+          <span style="color:var(--accent); margin-top:3px; flex-shrink:0; font-size:0.6rem;">✦</span>
+          One tap to apply any recommendation
+        </li>
+      </ul>
+    </div>
+
+    <div class="ai-card reveal">
+      <div class="ai-card-head">
+        <div class="ai-card-label"><div class="ai-dot"></div>Live recommendations</div>
+        <span class="ai-ts">Updated 3 min ago</span>
+      </div>
+
+      <div class="rec">
+        <div class="rec-level high">● High priority</div>
+        <p class="rec-body">Move "Book a strategy session" to position 2 — visitors from TikTok are 3× more likely to book a service when they see it before the fold.</p>
+        <div class="rec-impact">Predicted impact: <span>+28–41% bookings</span></div>
+      </div>
+
+      <div class="rec">
+        <div class="rec-level medium">● Medium priority</div>
+        <p class="rec-body">Rename "My course" to something action-led. Cosmos suggests "Learn to build a brand in 30 days" — action CTAs outperform labels by an average of 19%.</p>
+        <div class="rec-impact">Predicted impact: <span>+15–22% course clicks</span></div>
+      </div>
+
+      <div class="rec">
+        <div class="rec-level low">● Suggested</div>
+        <p class="rec-body">Instagram traffic drops off after link 3. Try an email capture at position 4 — catch intent before it leaves.</p>
+        <div class="rec-impact">Predicted impact: <span>+8–12% email sign-ups</span></div>
+      </div>
+
+      <div class="ai-apply">
+        <button class="apply-btn" onclick="this.textContent='Applied ✓'; this.style.background='rgba(154,174,245,0.12)'; this.style.color='var(--accent)';">Apply top recommendation</button>
+        <button class="dismiss-btn">Dismiss</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYTICS -->
+<div class="analytics-section" id="analytics">
+  <div class="analytics-inner">
+    <div class="eyebrow reveal">Analytics</div>
+    <h2 class="reveal">Focused metrics.<br><em class="glow">Clear</em> next steps.</h2>
+    <p class="lead reveal">Not a wall of numbers — the handful of signals that tell you whether your page is working and which link is carrying its weight.</p>
+
+    <div class="dash reveal">
+      <div class="dash-top">
+        <span class="dash-name">saraokafor.xyz/links</span>
+        <span class="dash-range">Last 7 days</span>
+      </div>
+
+      <div class="metrics-row">
+        <div class="metric">
+          <div class="metric-k">Total clicks</div>
+          <div class="metric-v">8,241</div>
+          <div class="metric-d">↑ +14% vs prior week</div>
+        </div>
+        <div class="metric">
+          <div class="metric-k">Unique visitors</div>
+          <div class="metric-v">6,108</div>
+          <div class="metric-d">↑ +9%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-k">Email captures</div>
+          <div class="metric-v">387</div>
+          <div class="metric-d">↑ +31%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-k">Link health</div>
+          <div class="metric-v" style="font-size:1.5rem; color:var(--mint);">All clear</div>
+          <div class="metric-d" style="color:var(--mint);">4 of 4 links safe</div>
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-box">
+          <div class="chart-label-sm">Daily clicks — this week</div>
+          <div class="bars">
+            <div class="bar-g"><div class="bar-b" style="height:55%;"></div></div>
+            <div class="bar-g"><div class="bar-b" style="height:70%;"></div></div>
+            <div class="bar-g"><div class="bar-b" style="height:48%;"></div></div>
+            <div class="bar-g"><div class="bar-b" style="height:83%;"></div></div>
+            <div class="bar-g"><div class="bar-b" style="height:91%;"></div></div>
+            <div class="bar-g"><div class="bar-b hi" style="height:100%;"></div></div>
+            <div class="bar-g"><div class="bar-b" style="height:74%;"></div></div>
+          </div>
+          <div class="bar-days">
+            <div class="bar-day">Mon</div>
+            <div class="bar-day">Tue</div>
+            <div class="bar-day">Wed</div>
+            <div class="bar-day">Thu</div>
+            <div class="bar-day">Fri</div>
+            <div class="bar-day">Sat</div>
+            <div class="bar-day">Sun</div>
+          </div>
+        </div>
+
+        <div class="sources">
+          <div class="chart-label-sm">Traffic by source</div>
+          <div class="src-row">
+            <div class="src-head"><span class="src-name">Instagram</span><span class="src-num">3,412</span></div>
+            <div class="src-track"><div class="src-fill" style="width:83%; background:var(--accent);opacity:0.7;"></div></div>
+          </div>
+          <div class="src-row">
+            <div class="src-head"><span class="src-name">TikTok</span><span class="src-num">2,108</span></div>
+            <div class="src-track"><div class="src-fill" style="width:51%; background:var(--mint);opacity:0.7;"></div></div>
+          </div>
+          <div class="src-row">
+            <div class="src-head"><span class="src-name">YouTube</span><span class="src-num">1,644</span></div>
+            <div class="src-track"><div class="src-fill" style="width:40%; background:rgba(247,128,128,0.7);"></div></div>
+          </div>
+          <div class="src-row">
+            <div class="src-head"><span class="src-name">Direct</span><span class="src-num">944</span></div>
+            <div class="src-track"><div class="src-fill" style="width:23%; background:rgba(255,255,255,0.25);"></div></div>
+          </div>
+          <div class="src-row">
+            <div class="src-head"><span class="src-name">Twitter / X</span><span class="src-num">133</span></div>
+            <div class="src-track"><div class="src-fill" style="width:8%; background:rgba(255,255,255,0.15);"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+  <div class="cta-haze"></div>
+  <div style="position:relative; z-index:1;">
+    <div class="eyebrow reveal" style="justify-content:center;">Early access</div>
+    <h2 class="reveal" style="text-align:center;">Your bio link,<br><em class="glow">optimized by data.</em></h2>
+    <p class="lead reveal" style="text-align:center;">Cosmos is in private development. Founding members get lifetime access to everything, plus direct input on what gets built next.</p>
+
+    <div class="waitlist-form reveal">
+      <input type="email" class="waitlist-input" placeholder="your@email.com">
+      <button class="btn-primary" onclick="
+        const i = this.previousElementSibling;
+        if(i.value.includes('@')){
+          this.textContent = '✓ You\'re on the list';
+          this.style.background='rgba(154,174,245,0.15)';
+          this.style.color='var(--accent)';
+          i.value='';
+        } else { i.focus(); i.style.borderColor='rgba(247,128,128,0.5)'; }
+      ">Request access</button>
+    </div>
+    <p class="cta-note reveal">No spam · Unsubscribe any time · 240+ creators already waiting</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Cosmos</span>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Twitter</a>
+      <a href="#">Contact</a>
+    </div>
+    <span class="footer-copy">© 2025 Cosmos. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+// ── Star field ──────────────────────────────────────────────
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  const count = Math.floor((W * H) / 7000);
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 0.8 + 0.2,
+      a: Math.random(),
+      speed: Math.random() * 0.3 + 0.1,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, W, H);
+  for (const s of stars) {
+    const opacity = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,210,255,${opacity})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(drawStars);
+}
+
+resize();
+initStars();
+requestAnimationFrame(drawStars);
+window.addEventListener('resize', () => { resize(); initStars(); });
+
+// ── Features horizontal scroll ────────────────────────────
+const track = document.getElementById('featTrack');
+const fill  = document.getElementById('featProgress');
+const count = document.getElementById('featCount');
+const TOTAL = 11;
+
+function updateProgress() {
+  const max = track.scrollWidth - track.clientWidth;
+  const pct = max > 0 ? track.scrollLeft / max : 0;
+  fill.style.width = (pct * 100).toFixed(1) + '%';
+  const current = Math.min(TOTAL, Math.round(pct * (TOTAL - 1)) + 1);
+  count.textContent = current + ' / ' + TOTAL;
+}
+track.addEventListener('scroll', updateProgress, { passive: true });
+updateProgress();
+
+// drag to scroll
+let isDragging = false, startX = 0, startScrollLeft = 0;
+track.addEventListener('mousedown', e => {
+  isDragging = true;
+  startX = e.pageX - track.offsetLeft;
+  startScrollLeft = track.scrollLeft;
+  track.style.userSelect = 'none';
+});
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+  track.style.userSelect = '';
+});
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const x = e.pageX - track.offsetLeft;
+  track.scrollLeft = startScrollLeft - (x - startX);
+});
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = (i * 0.05) + 's';
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
