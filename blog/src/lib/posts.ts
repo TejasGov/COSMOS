@@ -7,7 +7,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { readingTime as rt } from "reading-time";
+import rt from "reading-time";
 
 /** Absolute path to the markdown content directory. */
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -19,6 +19,16 @@ export interface EssayFrontmatter {
   tag: string; // single editorial category, e.g. "Craft"
   summary?: string;
   published?: boolean; // drafts can be excluded with published: false
+}
+
+/** YAML parses unquoted dates as Date objects; expose a consistent ISO date. */
+function normalizeFrontmatter(data: Record<string, unknown>): EssayFrontmatter {
+  return {
+    ...data,
+    date: data.date instanceof Date
+      ? data.date.toISOString().slice(0, 10)
+      : data.date,
+  } as unknown as EssayFrontmatter;
 }
 
 /** Fully resolved essay record used by list & detail pages. */
@@ -44,7 +54,7 @@ export function getAllEssays(): Essay[] {
   const essays = files.map<Essay>((file) => {
     const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf-8");
     const { data, content } = matter(raw);
-    const fm = data as unknown as EssayFrontmatter;
+    const fm = normalizeFrontmatter(data);
     const stats = rt(content); // e.g. { text: "7 min read", minutes, words }
 
     return {
@@ -74,7 +84,7 @@ export function getEssayBySlug(slug: string): Essay | null {
 
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
-  const fm = data as unknown as EssayFrontmatter;
+  const fm = normalizeFrontmatter(data);
   if (fm.published === false) return null;
 
   const stats = rt(content);
