@@ -1,0 +1,272 @@
+/* ============================================================================
+   globals.css — Design system for "INDEX" editorial blog
+   Tailwind CSS v4: the theme is declared in CSS (@theme), no tailwind.config.js.
+   Palette: near-monochrome, hairline borders, ONE accent (International
+   Klein Blue #002FA7). Dark mode inverts neutrals; accent shifts to a lighter
+   blue so it stays legible on obsidian (WCAG AA).
+   ========================================================================== */
+
+@import "tailwindcss";
+
+/* Class-based dark mode toggled by an inline script (no flash / no CLS). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---- Font faces: self-hosted latin subsets, variable weights 400–700 ---- */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 700;           /* variable range: 400 & 500 used as spec'd */
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/newsreader-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/newsreader-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---- Theme tokens exposed as Tailwind utilities -------------------------- */
+@theme {
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Newsreader", Charter, Georgia, "Times New Roman", serif;
+
+  /* Light-mode surfaces & ink */
+  --color-canvas: #fafafa;        /* page background            */
+  --color-surface: #f4f4f5;       /* row hover wash             */
+  --color-ink: #111111;           /* primary text               */
+  --color-muted: #6b7280;         /* secondary text (AA on bg)  */
+  --color-hairline: #e5e7eb;      /* 1px grid borders           */
+
+  /* Dark-mode counterparts */
+  --color-nightcanvas: #0c0c0c;   /* obsidian background        */
+  --color-nightsurface: #171717;  /* row hover wash             */
+  --color-nighthairline: #222222; /* borders                    */
+
+  /* Single hyper-restrained accent: International Klein Blue */
+  --color-accent: #002fa7;
+  --color-accent-dark: #6d9cff;   /* lifted tint for night mode */
+
+  /* Tighter tracking for the Zara-style display scale */
+  --tracking-tighter: -0.045em;
+}
+
+/* ---- Base ---------------------------------------------------------------- */
+html {
+  /* Prevent color-shift animation flash; set before paint via inline script */
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.dark body {
+  background-color: var(--color-nightcanvas);
+  color: #ededed; /* near-white ink on obsidian */
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+.dark ::selection {
+  background: var(--color-accent-dark);
+  color: #0c0c0c;
+}
+
+/* Tabular numerals everywhere mono metadata appears — keeps index columns
+   optically aligned (dates, read times, article numbers). */
+.font-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "liga" 1, "calt" 1; /* JetBrains ligatures for code */
+}
+
+/* Visible focus ring in the accent colour (keyboard accessibility). */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.dark :focus-visible {
+  outline-color: var(--color-accent-dark);
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Prose: hand-tuned editorial reading styles (replaces plugin) -------- */
+.prose-editorial {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem; /* 19px — optimal reading cadence */
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+.dark .prose-editorial {
+  color: #e6e6e6;
+}
+
+.prose-editorial > * + * {
+  margin-top: 1.35em;
+}
+
+.prose-editorial p {
+  hyphens: auto;
+}
+
+.prose-editorial a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 120ms ease;
+}
+.prose-editorial a:hover {
+  color: var(--color-accent);
+}
+.dark .prose-editorial a:hover {
+  color: var(--color-accent-dark);
+}
+
+.prose-editorial h2,
+.prose-editorial h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
+}
+.prose-editorial h2 {
+  font-size: 1.5rem;
+}
+.prose-editorial h3 {
+  font-size: 1.25rem;
+}
+
+/* Lists keep the editorial measure, minimal markers */
+.prose-editorial ul,
+.prose-editorial ol {
+  padding-left: 1.4em;
+}
+.prose-editorial li {
+  margin-top: 0.4em;
+}
+.prose-editorial li::marker {
+  color: var(--color-muted);
+}
+
+/* Pull-quote: 1px solid vertical border, deliberately understated */
+.prose-editorial blockquote {
+  border-left: 1px solid var(--color-hairline);
+  padding-left: 1.5rem;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-style: italic;
+  font-size: 1.3125rem;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+.dark .prose-editorial blockquote {
+  border-left-color: var(--color-nighthairline);
+  color: #ededed;
+}
+.prose-editorial blockquote p {
+  margin: 0;
+}
+.prose-editorial blockquote footer,
+.prose-editorial blockquote cite {
+  display: block;
+  margin-top: 0.8rem;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+}
+
+/* Inline code */
+.prose-editorial :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: 2px;
+  padding: 0.1em 0.35em;
+}
+.dark .prose-editorial :not(pre) > code {
+  background: var(--color-nightsurface);
+  border-color: var(--color-nighthairline);
+}
+
+/* Code blocks: hairline box, mono with ligatures, internal scroll only */
+.prose-editorial pre {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  background: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  -webkit-font-smoothing: auto;
+}
+.dark .prose-editorial pre {
+  background: #101012;
+  border-color: var(--color-nighthairline);
+}
+.prose-editorial pre code {
+  font-family: inherit;
+}
+
+/* Hairline rule between sections of an essay */
+.prose-editorial hr {
+  border: 0;
+  border-top: 1px solid var(--color-hairline);
+  margin: 3rem 0;
+}
+.dark .prose-editorial hr {
+  border-top-color: var(--color-nighthairline);
+}
+
+/* ---- Lightweight syntax highlighting (hand-authored token spans) --------- */
+.tok-k { color: #002fa7; }              /* keyword   */
+.tok-f { color: #1d4ed8; }              /* function  */
+.tok-s { color: #3f6212; }              /* string    */
+.tok-c { color: #6b7280; font-style: italic; } /* comment */
+.tok-n { color: #7c3aed; }              /* number    */
+.tok-p { color: #4b5563; }              /* punctuation-ish */
+
+.dark .tok-k { color: #8ab4ff; }
+.dark .tok-f { color: #a5c8ff; }
+.dark .tok-s { color: #9cc76f; }
+.dark .tok-c { color: #6b7280; }
+.dark .tok-n { color: #c4b5fd; }
+.dark .tok-p { color: #9ca3af; }
